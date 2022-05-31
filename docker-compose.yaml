@@ -1,0 +1,16 @@
+version: '3.1'
+
+services:
+  users_api:
+    image: web
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: users_api_cp
+    ports:
+      - "4000:4000"
+    expose:
+      - '4000'
+    volumes:
+      - ./src:/src
+    working_dir: /src
