@@ -4,7 +4,7 @@ import unittest
 import requests
 import custom_encoder
 
-base_url='http://localhost:4000/'
+base_url='http://localhost/'
 
 #Prueba el constructor de la respuesta de la API (HTTP)
 class TestBuildResponse(unittest.TestCase):

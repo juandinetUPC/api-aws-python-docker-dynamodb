@@ -1,16 +1,25 @@
 version: '3.1'
 
 services:
+  # git:
+  #   image: git_sample_app_docker_compose:1.0
+  #   container_name: git_cp
+  #   build: .
+  #   command: git -C /build clone https://github.com/juandinetUPC/api-aws-python-docker-dynamodb.git
+  #   volumes:
+  #     - ./build:/build
   users_api:
     image: web
+    # depends_on:
+    #   - git_cp
     build:
       context: ./
       dockerfile: Dockerfile
     container_name: users_api_cp
     ports:
-      - "4000:4000"
+      - "80:4000"
     expose:
-      - '4000'
+      - '80'
     volumes:
       - ./src:/src
     working_dir: /src
