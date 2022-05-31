@@ -1,51 +1,74 @@
-# Crud-Flask
-## En un entorno virtual usando Python3 , pip y la siguiente lista de dependencias (requirements.txt)
-- click==8.1.3
-- colorama==0.4.4
-- Flask==2.1.2
-- Flask-MySQLdb==1.0.1
-- importlib-metadata==4.11.3
-- itsdangerous==2.1.2
-- Jinja2==3.1.2
-- MarkupSafe==2.1.1
-- mysqlclient==2.1.0
-- Werkzeug==2.1.2
-- zipp==3.8.0
+# API Python usando DynamoDB(AWS) desplegada con Docker+Docker-Compose en una instancia EC2 de AWS 
 
+## By: Juan Diego Cubillos Maestre - Especialista en Ingeniería de Software
+### [Github](https://github.com/juandinetUPC)
+### [LinkedIn](https://linkedin.com/in/juan-diego-cubillos-630654195)
 
+## Tecnologías utilizadas
+- Python 3.9.0
+- UnitTest for Python
+- Git (Github)
+- AWS EC2
+- Ubuntu 20.04.3 LTS
+- Docker 17.09.0
+- Docker compose 17.09.0
+- AWS CLI 1.16.9
+- AWS SDK for Python 1.16.9
+- AWS Boto3 1.14.15
+- AWS IAM 
+- AWS DynamoDB 1.12.20
+ 
 
-Si no está instalado, instalamos virtualenv
+## Diseño de la Solución
 
-```powershell
-pip install virtualenv
-```
+![avatar](API_python_docker_AWS__DynamoDB.drawio.png)
 
-Para crear un ambiente virtual digitamos el siguiente comando:
+##Instalación de la Solución
 
-```powershell
-virtualenv -p python3 env
-```
+En una instancia de AWS EC2, se instala Docker, Docker-Compose y Git.
+https://docs.docker.com/engine/install/
+https://github.com/git-guides/install-git
 
-para poner a funcionar el entorno virtual, se debe ejecutar:
-
-```powershell
-.\env\Scripts\activate
-```
-
-Una vez iniciado el entorno virtual, se ejecuta el siguiente comando:
+Probamos que el docker está instalado y clonamos el repositorio de nuestra solución.
 
 ```powershell
-pip install -r .\requirements.txt
+docker --version
+docker-compose --version
+mkdir -p /home/ubuntu/API/
+cd /home/ubuntu/API/
+git clone https://github.com/juandinetUPC/api-aws-python-docker-dynamodb.git
+cd api-aws-python-docker-dynamodb/
+
 ```
 
-Para correr la solución se ejecuta el siguiente comando:
+Editamos es el archivo `config_example.py` para agregar las credenciales IAM-AWS y lo renombramos a `config.py`
+para conectar la instancia a la base de datos.
 
 ```powershell
-python .\src\app.py
+nano config_example.py
 ```
 
-Para correr los test unitarios se ejecuta el siguiente comando:
+Constrimos las imagenes necesarias para la ejecución de la aplicación.
 
 ```powershell
-python .\src\test_app.py
+docker-compose build
+docker-compose up -d
 ```
+
+Revisamos la ejecución del contenedor.
+
+```powershell
+docker ps -a
+```
+![avatar](2022-05-31_08h49_24.png)
+
+Debemos asegurarnos que los puertos de la API(80, 443 en este caso) esten abiertos en la VPC-AWS hacia las IP autorizadas a acceder en este caso está abierto a todas las IP(0.0.0.0/0) por ser una API de pruebas.
+
+![avatar](2022-05-31_10h03_46.png)
+
+Hacemos pruebas  manuales de la API.
+![avatar](2022-05-31_08h51_23.png)
+
+Y podemos correr los test unitarios en local poniendo como `base_url` la IP de nuestra instancia: `http://52.15.78.75/`
+![avatar](2022-05-31_10h17_20.png)
+
