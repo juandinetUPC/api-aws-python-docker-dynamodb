@@ -1,5 +1,4 @@
-from json import JSONDecoder
-from flask import Flask, flash, jsonify, render_template, request, redirect, url_for
+from flask import Flask, jsonify, request
 from decimal import Decimal
 from custom_encoder import buildResponse
 import controller as dynamodb
@@ -8,8 +7,6 @@ logger=logging.getLogger()
 logger.setLevel(logging.INFO)
 
 app =Flask(__name__)
-
-# usersTable = resource.Table('UserTable')
 
 @app.route('/') # prueba de ruta
 def index():
@@ -21,19 +18,20 @@ def index():
 def create_table():
     dynamodb.create_table()
     return jsonify({ f'Message': 'Tabla creada'} ), 200    
-    # return jsonify({ f'Message': mensaje} ), 200
 
-# # Agregar un usuario
-@app.route('/user', methods=['POST']) 
+
+@app.route('/user', methods=['POST'])  # Agregar un usuario
 def create_user():
     userId = int(request.json.get('userid'))
     username = request.json.get('username')
     age = int(request.json.get('age'))
+
     if not userId or not username:
         return jsonify({'error': 'Debe ingresar un "userid", "username" y "age"'}), 400
     
     item={"userid": userId, "username": username, "age": age}
     table = dynamodb.table()
+
     try:
         ifExist = table.get_item( Key = { "userid": Decimal(userId) } )
         
@@ -42,22 +40,17 @@ def create_user():
             body={'Message':'Usuario ya existe',
                   "User":ifExist['Item']}
             return jsonify(body), 202
-            # return buildResponse(202,body)
         else:
             #Si no existe el usuario, lo inserta en la tabla    
             table.put_item(Item=item)
-
             body = {
                 "Message": "Usuario creado",
                 "User": item
             }
-            # response =  buildResponse(201,body)
             return jsonify(body), 201
-            return response
     except:
         logger.exception(f'Error al tratar de conectarse a la base de datos !! {userId}')
         return buildResponse(500,{'Message':'Error al tratar de crear el usuario'})
-    
     
 
 @app.route('/users') # Listar todos los usuarios
@@ -99,18 +92,15 @@ def read_user(userid):
 
         if 'Item' in response:
             #Si existe el usuario, lo devuelve
-            # return buildResponse(200, JSONDecoder(response['Item']))
             return jsonify(response['Item']), 200
         
         else:
             #Si no existe el usuario, devuelve el mensaje de error
-            # return buildResponse(404,{'Message':f'userid:{userId} not found'})
             return jsonify({'Message':f'userid:{userId} not found'}), 404
     
     except:
         #Si no se puede consultar la tabla, se devuelve un error
         logger.exception(f'Error al tratar de consultar la base de datos !! {userId}')
-        # return buildResponse(500,{'Message':'Error al tratar de conectar con la base de datos'})
         return jsonify({'Message':'Error al tratar de conectar con la base de datos'}), 500
 
 
@@ -133,7 +123,6 @@ def update_user(userid):
     if not age or not username:
         return jsonify({'error': 'Debe ingresar un "username" y "age"'}), 400
     
-    # item={"username": username, "age": age}
     table = dynamodb.table()
     
     try:
@@ -188,7 +177,7 @@ def delete_user(userid):
     Returns:
         http: 200 si el usuario lo elimina
     """
-    userId = userid #int(request.json.get('userid'))
+    userId = userid 
     table = dynamodb.table()
     
     try:

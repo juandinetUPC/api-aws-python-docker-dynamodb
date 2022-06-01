@@ -1,11 +1,12 @@
 #API unit test
+# By: Juandinet
 from decimal import Decimal
 import unittest
 import requests
 import custom_encoder
 
-# base_url='http://localhost/'
-base_url='http://52.15.78.75/'
+base_url='http://localhost/'
+# base_url='http://52.15.78.75/'
 
 #Prueba el constructor de la respuesta de la API (HTTP)
 class TestBuildResponse(unittest.TestCase):
