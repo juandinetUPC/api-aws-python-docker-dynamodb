@@ -10,8 +10,8 @@ app =Flask(__name__)
 
 @app.route( '/' ) # prueba de ruta
 def index():
-    numero = Decimal(1.6)
-    mensaje = f'API by Juandinet { numero }'
+    numero = Decimal(1.7)
+    mensaje = f'API by Juandinet { numero:.2f }'
     return jsonify( { f'Message': mensaje} ), 200
 
 @app.route( '/createTable' ) # crear tabla
