@@ -6,6 +6,7 @@ import logging
 logger=logging.getLogger()
 logger.setLevel( logging.INFO )
 
+
 app =Flask(__name__)
 
 @app.route( '/' ) # prueba de ruta
@@ -210,7 +211,9 @@ def delete_user( userid ):
 
 
 if __name__ == "__main__":
+    # from waitress import serve
     # port = 4000  Para que salga por el puerto 4000
     # host = '0.0.0.0' Para que salga por todos las IPs
     # debug = True Para que se vea el cambio en el servidor sin reiniciar
     app.run( port = 4000,debug = True, host = '0.0.0.0' )
+    # serve(app, host="0.0.0.0", port=4000)
